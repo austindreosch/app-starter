@@ -1,0 +1,26 @@
+name: claude-review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Code Review
+        uses: anthropics/claude-code-review-action@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
